@@ -11,8 +11,8 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #000; /* fundo preto */
-  color: #fff;            /* texto branco */
+  background-color: #0f380f; /* verde escuro estilo GB */
+  color: #9bbc0f;            /* verde claro estilo GB */
 }
 
 #start-screen h1 {
@@ -23,9 +23,9 @@ body {
 
 #start-button {
   padding: 15px 30px;
-  font-size: 24px;
-  background-color: #fff;  /* botão branco */
-  color: #000;             /* texto preto */
+  font-size: 18px;
+  background-color: #9bbc0f;
+  color: #0f380f;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -39,4 +39,31 @@ canvas {
   border: 4px solid #000;
   display: block;
   margin: 0 auto;
+}
+
+body {
+  background-color: #0f380f;
+  color: #306230;
+  font-family: 'Press Start 2P', monospace;
+}
+
+#game-over-screen {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #0f380f;
+  color: #9bbc0f;
+}
+
+#restart-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #9bbc0f;
+  color: #0f380f;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 20px;
 }
