@@ -3,11 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sunny Run</title>
+  <title>SUNNY</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <canvas id="gameCanvas"></canvas>
+  <div id="start-screen">
+    <h1>SUNNY</h1>
+    <button id="start-button">START</button>
+  </div>
+  
+  <canvas id="gameCanvas" style="display: none;"></canvas>
+
+  <audio id="bg-music" src="assets/gb-music.mp3" loop></audio>
+
   <script src="script.js"></script>
 </body>
 </html>
