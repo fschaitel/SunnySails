@@ -134,3 +134,19 @@ You may reuse the code freely. Please credit or replace visuals/audio if you pla
 Created with curiosity and pixel love  
 by **Felipe Schaitel**  
 📅 2025-03-30
+
+
+## 🆕 Update v1.3.0 – Sea King, Diagonal Movement & Speed Boost (2025-03-30)
+
+### Gameplay Mechanics
+- 🐉 **Sea King** added as a new boss-style obstacle that appears every **1500 points**
+- ⚡ **Progressive acceleration**: the ship becomes faster with each Sea King encounter (max speed 10)
+- 🎮 **Diagonal movement** using multiple keys (e.g. `↑ + →`) for more fluid control
+- 🎯 **Hitbox adjusted**: Sea King's collision area reduced for fairness
+- 🌊 **Wave conflict prevention**: Sea King and wave cannot spawn at the same time
+- 🔁 Game restart now resets all states without visual glitches
+
+### Code & Performance
+- Full **refactor of movement system** using `keydown` / `keyup` events
+- Cleaned up **syntax bugs and duplication** (`padding`, `break`, extra brackets)
+- Game loop and collision detection **fully stabilized**
