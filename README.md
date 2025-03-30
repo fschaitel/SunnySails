@@ -150,3 +150,21 @@ by **Felipe Schaitel**
 - Full **refactor of movement system** using `keydown` / `keyup` events
 - Cleaned up **syntax bugs and duplication** (`padding`, `break`, extra brackets)
 - Game loop and collision detection **fully stabilized**
+
+## 🆕 Update v1.4.0 – Intro Video & Music Sync (2025-03-30)
+
+### Intro & Audio
+- 🎬 Added an **intro video** (`intro-video.mp4`) that plays when the player clicks START
+- 🔇 The video is **muted by default**, preserving music clarity
+- 🎵 Background music (`gb-music.mp3`) now starts **alongside the video**, not after gameplay begins
+- ⏱️ Game begins **only after the video finishes playing**
+
+### Code Updates
+- Modified `index.html` to include a `<video>` element before the canvas
+- Updated `script.js` to handle:
+  - Playing the intro video and syncing it with the music
+  - Starting the game loop after the video ends
+  - Fallback behavior: if video fails to play, game starts immediately
+
+### Assets
+- New asset: `intro-video.mp4` added to `assets/` directory
