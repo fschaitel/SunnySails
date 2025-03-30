@@ -168,3 +168,11 @@ by **Felipe Schaitel**
 
 ### Assets
 - New asset: `intro-video.mp4` added to `assets/` directory
+
+- ## 🆕 Update v1.4.1 – Enhanced 8-bit UI (2025-03-30)
+
+### Visual & UI
+- 🖼️ Redesigned **START** and **GAME OVER** screens with 8-bit background (`ocean-bg-light.png`)
+- 🕹️ Stylized retro buttons and text using pixel font and vibrant arcade colors
+- 🌊 Stronger visual coherence with updated pixel art sprites and retro aesthetics
+
