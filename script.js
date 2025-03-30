@@ -208,13 +208,26 @@ const startScreen = document.getElementById('start-screen');
 const startButton = document.getElementById('start-button');
 const bgMusic = document.getElementById('bg-music');
 
+// Vídeo de introdução
 startButton.addEventListener('click', () => {
+  const introVideo = document.getElementById('intro-video');
+
+  // Esconde a tela de início
   startScreen.style.display = 'none';
-  canvas.style.display = 'block';
+
+  // Mostra o vídeo e inicia a música
+  introVideo.style.display = 'block';
   bgMusic.volume = 0.2;
-  bgMusic.play();
-  createObstacle();
-  gameLoop();
+  bgMusic.play(); // Música começa com o vídeo
+  introVideo.play();
+
+  // Quando o vídeo termina, começa o jogo
+  introVideo.onended = function () {
+    introVideo.style.display = 'none';
+    canvas.style.display = 'block';
+    createObstacle();
+    gameLoop();
+  };
 });
 
 document.addEventListener('keydown', (e) => {
