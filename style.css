@@ -1,8 +1,9 @@
 body {
   margin: 0;
   background-color: #000;
-  font-family: monospace;
+  font-family: 'Press Start 2P', monospace;
   text-align: center;
+  color: #306230;
 }
 
 #start-screen {
@@ -11,28 +12,35 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #0f380f; /* verde escuro estilo GB */
-  color: #9bbc0f;            /* verde claro estilo GB */
+  background-image: url('assets/ocean-bg-light.png');
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  text-shadow: 2px 2px 0 #000;
 }
 
 #start-screen h1 {
-  font-size: 48px;
-  margin-bottom: 20px;
-  color: #fff;
+  font-size: 36px;
+  color: #ffcc00;
+  text-shadow: 3px 3px 0 #000;
+  margin-bottom: 40px;
+  font-family: 'Press Start 2P', monospace;
 }
 
 #start-button {
-  padding: 15px 30px;
-  font-size: 18px;
-  background-color: #9bbc0f;
-  color: #0f380f;
-  border: none;
-  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-family: 'Press Start 2P', monospace;
+  background-color: #ffcc00;
+  color: #000;
+  border: 3px solid #000;
+  border-radius: 0;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 #start-button:hover {
-  background-color: #ddd;
+  background-color: #ffe066;
 }
 
 canvas {
@@ -41,29 +49,45 @@ canvas {
   margin: 0 auto;
 }
 
-body {
-  background-color: #0f380f;
-  color: #306230;
-  font-family: 'Press Start 2P', monospace;
-}
-
 #game-over-screen {
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #0f380f;
-  color: #9bbc0f;
+  background-image: url('assets/ocean-bg-light.png');
+  background-size: cover;
+  background-position: center;
+  color: #ff4444;
+  text-shadow: 2px 2px 0 #000;
+}
+
+#game-over-screen h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+  font-family: 'Press Start 2P', monospace;
+}
+
+#final-score,
+#best-score {
+  font-size: 18px;
+  margin: 5px;
+  color: #fff;
+  text-shadow: 1px 1px 0 #000;
 }
 
 #restart-button {
-  padding: 12px 24px;
+  padding: 10px 20px;
   font-size: 16px;
-  background-color: #9bbc0f;
-  color: #0f380f;
-  border: none;
-  border-radius: 6px;
+  font-family: 'Press Start 2P', monospace;
+  background-color: #ff4444;
+  color: #fff;
+  border: 3px solid #000;
+  border-radius: 0;
   cursor: pointer;
   margin-top: 20px;
+}
+
+#restart-button:hover {
+  background-color: #ff7777;
 }
