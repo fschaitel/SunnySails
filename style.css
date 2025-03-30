@@ -67,31 +67,3 @@ body {
   cursor: pointer;
   margin-top: 20px;
 }
-
-
-body {
-  background-color: #0f380f;
-  color: #306230;
-  font-family: 'Press Start 2P', monospace;
-}
-
-#game-over-screen {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #0f380f;
-  color: #9bbc0f;
-}
-
-#restart-button {
-  padding: 12px 24px;
-  font-size: 16px;
-  background-color: #9bbc0f;
-  color: #0f380f;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-top: 20px;
-}
