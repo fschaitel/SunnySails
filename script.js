@@ -4,7 +4,7 @@ const ctx = canvas.getContext('2d');
 canvas.width = 800;
 canvas.height = 400;
 
-const SKY_LIMIT = 180; // limite superior para o navio
+const SKY_LIMIT = 180;
 
 let ship = {
   x: 50,
@@ -28,7 +28,7 @@ shipImage.src = 'assets/sunny-8bit.png';
 const waveImage = new Image();
 waveImage.src = 'assets/wave.png';
 
-// Movimento do fundo
+// Fundo rolando
 let bgX = 0;
 
 function drawBackground() {
@@ -100,9 +100,9 @@ function drawScore() {
 
 function gameLoop() {
   if (gameOver) {
-    ctx.fillStyle = 'red';
-    ctx.font = '40px Arial';
-    ctx.fillText('GAME OVER', canvas.width / 2 - 120, canvas.height / 2);
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 60px Arial';
+    ctx.fillText('GAME OVER', canvas.width / 2 - 180, canvas.height / 2);
     return;
   }
 
@@ -119,15 +119,29 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
+// Tela de início
+const startScreen = document.getElementById('start-screen');
+const startButton = document.getElementById('start-button');
+const bgMusic = document.getElementById('bg-music');
+
+startButton.addEventListener('click', () => {
+  startScreen.style.display = 'none';
+  canvas.style.display = 'block';
+  bgMusic.volume = 0.2;
+  bgMusic.play();
+  createObstacle();
+  gameLoop();
+});
+
+// Movimentação
 document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowUp' && ship.y > SKY_LIMIT) {
     ship.y -= ship.speed * 2;
   } else if (e.key === 'ArrowDown' && ship.y + ship.height < canvas.height) {
     ship.y += ship.speed * 2;
+  } else if (e.key === 'ArrowRight' && ship.x + ship.width < canvas.width) {
+    ship.x += ship.speed * 2;
+  } else if (e.key === 'ArrowLeft' && ship.x > 0) {
+    ship.x -= ship.speed * 2;
   }
 });
-
-waveImage.onload = () => {
-  createObstacle();
-  gameLoop();
-};
