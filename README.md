@@ -3,7 +3,7 @@
 **Sunny Run** is a retro-inspired 2D runner game made with HTML, CSS, and JavaScript.  
 It's a personal experiment — my first full game project — blending pixel art, Game Boy aesthetics, and basic game mechanics into a playful learning experience.
 
-> 🎮 **Play now:** [Click here to play Sunny Run on GitHub Pages](https://your-username.github.io/sunny-run/)  
+> 🎮 **Play now:** [Click here to play Sunny Run on GitHub Pages]([https://fschaitel.github.io/SunnySails/])  
 > *(Replace with your real GitHub Pages link!)*
 
 ---
@@ -116,5 +116,5 @@ You may reuse the code freely. Please credit or replace visuals/audio if you pla
 ## 👨‍💻 Author
 
 Created with curiosity and pixel love  
-by **[Your Name]**  
+by **Felipe Schaitel**  
 📅 2025-03-30
