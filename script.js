@@ -30,9 +30,10 @@ waveImage.src = 'assets/wave.png';
 
 // Fundo rolando
 let bgX = 0;
+let bgSpeed = 0.5;
 
 function drawBackground() {
-  bgX -= 1;
+  bgX -= bgSpeed;
   if (bgX <= -canvas.width) bgX = 0;
   ctx.drawImage(bgImage, bgX, 0, canvas.width, canvas.height);
   ctx.drawImage(bgImage, bgX + canvas.width, 0, canvas.width, canvas.height);
@@ -73,7 +74,7 @@ function updateObstacles() {
 }
 
 function detectCollision() {
-  const padding = 10;
+  const padding = 22;
 
   for (let obs of obstacles) {
     const obsX = obs.x + padding;
@@ -100,11 +101,11 @@ function drawScore() {
 
 function gameLoop() {
   if (gameOver) {
-    ctx.fillStyle = 'white';
-    ctx.font = 'bold 60px Arial';
-    ctx.fillText('GAME OVER', canvas.width / 2 - 180, canvas.height / 2);
+    canvas.style.display = 'none';
+    document.getElementById('game-over-screen').style.display = 'flex';
+    document.getElementById('final-score').textContent = `Score: ${score}`;
     return;
-  }
+}
 
   drawBackground();
   drawShip();
@@ -144,4 +145,16 @@ document.addEventListener('keydown', (e) => {
   } else if (e.key === 'ArrowLeft' && ship.x > 0) {
     ship.x -= ship.speed * 2;
   }
+});
+
+// Restart logic
+document.getElementById('restart-button').addEventListener('click', () => {
+  ship.x = 50;
+  ship.y = canvas.height - 120;
+  obstacles = [];
+  gameOver = false;
+  score = 0;
+  document.getElementById('game-over-screen').style.display = 'none';
+  canvas.style.display = 'block';
+  gameLoop();
 });
