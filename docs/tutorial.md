@@ -187,5 +187,3 @@ This tutorial covers the main mechanics and aspects already implemented in Sunny
 
 ---
 
-Good luck with your project, and fair winds for SunnySails!
-
