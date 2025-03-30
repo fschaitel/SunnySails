@@ -67,7 +67,7 @@ This project covers core game development concepts:
 ## 📁 Project Structure
 
 ```
-sunny-run/
+SunnySails/
 ├── index.html
 ├── style.css
 ├── script.js
@@ -84,8 +84,8 @@ sunny-run/
 ## 🚀 Run Locally
 
 ```bash
-git clone https://github.com/your-username/sunny-run.git
-cd sunny-run
+git clone https://github.com/your-username/SunnySails.git
+cd SunnySails
 # Use Live Server (VS Code extension) or any local HTTP server
 ```
 
@@ -100,7 +100,7 @@ cd sunny-run
 3. Set **Source: main / root**
 4. After publishing, your game will be live at:
 ```
-https://your-username.github.io/sunny-run/
+https://your-username.github.io/SunnySails/
 ```
 
 ---
