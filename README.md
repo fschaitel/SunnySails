@@ -64,6 +64,23 @@ This project covers core game development concepts:
 
 ---
 
+
+---
+
+## 🆕 Update v1.1 - Retro Aesthetic, Game Over Screen & Tweaks (2025-03-29)
+
+### Visual & UI
+- Full **Game Boy-inspired aesthetic**: green monochrome palette and pixel font
+- Updated **start screen** to match retro style
+- New **GAME OVER screen** with final score and **RESTART** button
+
+### Gameplay Changes
+- Waves now **come from the right to the left**
+- **Hitbox reduced** for fairer collisions
+- Background uses **smooth parallax scrolling**
+- Player can **restart the game** after losing without refreshing the page
+
+
 ## 📁 Project Structure
 
 ```
