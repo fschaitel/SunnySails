@@ -1,4 +1,4 @@
-# 🌞 Sunny Run
+# 🌞 Sunny Sails
 
 **Sunny Run** is a retro-inspired 2D runner game made with HTML, CSS, and JavaScript.  
 It's a personal experiment — my first full game project — blending pixel art, Game Boy aesthetics, and basic game mechanics into a playful learning experience.
