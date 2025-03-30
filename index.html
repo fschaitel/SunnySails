@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SUNNY</title>
+  <title>🏴‍☠️</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="start-screen">
-    <h1>SUNNY</h1>
+    <h1>🏴‍☠️</h1>
     <button id="start-button">START</button>
   </div>
   
   <canvas id="gameCanvas" style="display: none;"></canvas>
+
+  <div id="game-over-screen" style="display: none;">
+    <h1>GAME OVER</h1>
+    <p id="final-score"></p>
+    <button id="restart-button">RESTART</button>
+  </div>
 
   <audio id="bg-music" src="assets/gb-music.mp3" loop></audio>
 
