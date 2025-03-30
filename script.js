@@ -241,5 +241,3 @@ document.getElementById('restart-button').addEventListener('click', () => {
   canvas.style.display = 'block';
   gameLoop();
 });
-  gameLoop();
-});
