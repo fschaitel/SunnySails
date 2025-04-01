@@ -165,10 +165,11 @@ function triggerBlink() {
 }
 
 function drawScore() {
+  const iconSize = 24;
+  ctx.drawImage(berryImage, 10, 8, iconSize, iconSize);
   ctx.fillStyle = 'black';
   ctx.font = '20px Arial';
-  ctx.fillText(`${score}`, 40, 30);
-  ctx.drawImage(berryImage, 10, 10, 24, 24);
+  ctx.fillText(`${score}`, 10 + iconSize + 8, 28);
 }
 
 function drawLives() {
@@ -249,7 +250,7 @@ function gameLoop() {
     canvas.style.display = 'none';
     document.getElementById('game-over-screen').style.display = 'flex';
     document.getElementById('final-score').textContent = `Score: ${score}`;
-    document.getElementById('best-score').innerHTML = `Best Score: <img src="assets/berry.png" width="32" style="vertical-align: middle;"> ${highScore}`;
+    document.getElementById('best-score').innerHTML = `<img src="assets/berry.png" width="32" style="vertical-align:middle; margin-right:6px;">Best Score: ${highScore}`;
     return;
   }
 
