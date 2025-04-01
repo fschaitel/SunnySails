@@ -25,6 +25,11 @@ let lastSeaKingSpawn = 0;
 let skipNextObstacle = false;
 let keys = {};
 
+let lifeItem = null;
+const LIFE_ITEM_INTERVAL = 10000;
+const MAX_LIVES = 5;
+let lastLifeItemScore = 0;
+
 // Imagens
 const bgImage = new Image();
 bgImage.src = 'assets/ocean-bg-light.png';
@@ -38,6 +43,12 @@ waveImage.src = 'assets/wave.png';
 const seaKingImage = new Image();
 seaKingImage.src = 'assets/sea-king.png';
 seaKingImage.onerror = () => console.warn('⚠️ sea-king.png não foi carregado');
+
+const lifeImage = new Image();
+lifeImage.src = 'assets/akuma-nomi.png';
+
+const hatImage = new Image();
+hatImage.src = 'assets/straw-hat.png';
 
 let bgX = 0;
 let bgSpeed = 0.5;
@@ -104,17 +115,25 @@ function detectCollision() {
   if (invincible) return;
 
   for (let obs of obstacles) {
-    const padding = obs.isSeaKing ? 40 : 22;
-    const obsX = obs.x + padding;
-    const obsY = obs.y + padding;
-    const obsWidth = obs.width - padding * 2;
-    const obsHeight = obs.height - padding * 2;
+    const paddingTop = obs.isSeaKing ? 60 : 45;
+    const paddingSides = obs.isSeaKing ? 40 : 22;
+    const obsX = obs.x + paddingSides;
+    const obsY = obs.y + paddingTop;
+    const obsWidth = obs.width - paddingSides * 2;
+    const obsHeight = obs.height - paddingTop;
+
+    // Reduz hitbox do navio pela parte superior
+    const shipPaddingTop = 20;
+    const shipX = ship.x;
+    const shipY = ship.y + shipPaddingTop;
+    const shipWidth = ship.width;
+    const shipHeight = ship.height - shipPaddingTop;
 
     if (
-      ship.x < obsX + obsWidth &&
-      ship.x + ship.width > obsX &&
-      ship.y < obsY + obsHeight &&
-      ship.y + ship.height > obsY
+      shipX < obsX + obsWidth &&
+      shipX + shipWidth > obsX &&
+      shipY < obsY + obsHeight &&
+      shipY + shipHeight > obsY
     ) {
       lives--;
       triggerBlink();
@@ -142,11 +161,16 @@ function drawScore() {
 }
 
 function drawLives() {
-  const size = 20;
+  const size = 24;
   const gap = 10;
   for (let i = 0; i < lives; i++) {
-    ctx.fillStyle = 'black';
-    ctx.fillRect(canvas.width - (size + gap) * (i + 1), 10, size, size);
+    ctx.drawImage(
+      hatImage,
+      canvas.width - (size + gap) * (i + 1),
+      10,
+      size,
+      size
+    );
   }
 }
 
@@ -162,6 +186,44 @@ function updateMovement() {
   }
   if (keys['ArrowLeft'] && ship.x > 0) {
     ship.x -= ship.speed;
+  }
+}
+
+function createLifeItem() {
+  const size = 32;
+  const x = canvas.width;
+  const y = SKY_LIMIT + Math.random() * (canvas.height - SKY_LIMIT - size);
+  lifeItem = {
+    x,
+    y,
+    size,
+    collected: false
+  };
+}
+
+function drawLifeItem() {
+  if (lifeItem && !lifeItem.collected) {
+    ctx.drawImage(lifeImage, lifeItem.x, lifeItem.y, lifeItem.size, lifeItem.size);
+  }
+}
+
+function updateLifeItem() {
+  if (lifeItem && !lifeItem.collected) {
+    lifeItem.x -= 3;
+
+    if (
+      ship.x < lifeItem.x + lifeItem.size &&
+      ship.x + ship.width > lifeItem.x &&
+      ship.y < lifeItem.y + lifeItem.size &&
+      ship.y + ship.height > lifeItem.y
+    ) {
+      lifeItem.collected = true;
+      if (lives < MAX_LIVES) lives++;
+    }
+
+    if (lifeItem.x + lifeItem.size < 0) {
+      lifeItem = null;
+    }
   }
 }
 
@@ -187,6 +249,8 @@ function gameLoop() {
   detectCollision();
   drawScore();
   drawLives();
+  drawLifeItem();
+  updateLifeItem();
 
   score++;
   if (score % 100 === 0) {
@@ -200,6 +264,10 @@ function gameLoop() {
     createSeaKing();
     lastSeaKingSpawn = score;
   }
+  if (score - lastLifeItemScore >= LIFE_ITEM_INTERVAL && lives < MAX_LIVES) {
+    createLifeItem();
+    lastLifeItemScore = score;
+  }
 
   requestAnimationFrame(gameLoop);
 }
@@ -208,20 +276,15 @@ const startScreen = document.getElementById('start-screen');
 const startButton = document.getElementById('start-button');
 const bgMusic = document.getElementById('bg-music');
 
-// Vídeo de introdução
 startButton.addEventListener('click', () => {
   const introVideo = document.getElementById('intro-video');
 
-  // Esconde a tela de início
   startScreen.style.display = 'none';
-
-  // Mostra o vídeo e inicia a música
   introVideo.style.display = 'block';
   bgMusic.volume = 0.2;
-  bgMusic.play(); // Música começa com o vídeo
+  bgMusic.play();
   introVideo.play();
 
-  // Quando o vídeo termina, começa o jogo
   introVideo.onended = function () {
     introVideo.style.display = 'none';
     canvas.style.display = 'block';
@@ -248,6 +311,8 @@ document.getElementById('restart-button').addEventListener('click', () => {
   invincible = false;
   lastSeaKingSpawn = 0;
   skipNextObstacle = false;
+  lifeItem = null;
+  lastLifeItemScore = 0;
   document.getElementById('final-score').textContent = '';
   document.getElementById('best-score').textContent = '';
   document.getElementById('game-over-screen').style.display = 'none';
