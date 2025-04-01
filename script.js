@@ -50,6 +50,9 @@ lifeImage.src = 'assets/akuma-nomi.png';
 const hatImage = new Image();
 hatImage.src = 'assets/straw-hat.png';
 
+const berryImage = new Image();
+berryImage.src = 'assets/berry.png';
+
 let bgX = 0;
 let bgSpeed = 0.5;
 
@@ -75,7 +78,7 @@ function createObstacle() {
   const y = minY + Math.random() * (maxY - minY);
 
   const baseSpeed = 3;
-  const difficultyFactor = Math.min(score / 2000, 5); // vai até +5
+  const difficultyFactor = Math.min(score / 2000, 5);
   const speed = baseSpeed + Math.random() * difficultyFactor;
 
   console.log("🌊 New wave speed:", speed.toFixed(2));
@@ -164,7 +167,8 @@ function triggerBlink() {
 function drawScore() {
   ctx.fillStyle = 'black';
   ctx.font = '20px Arial';
-  ctx.fillText(`Score: ${score}`, 10, 30);
+  ctx.fillText(`${score}`, 40, 30);
+  ctx.drawImage(berryImage, 10, 10, 24, 24);
 }
 
 function drawLives() {
@@ -245,7 +249,7 @@ function gameLoop() {
     canvas.style.display = 'none';
     document.getElementById('game-over-screen').style.display = 'flex';
     document.getElementById('final-score').textContent = `Score: ${score}`;
-    document.getElementById('best-score').textContent = `🏆 Best Score: ${highScore}`;
+    document.getElementById('best-score').innerHTML = `Best Score: <img src="assets/berry.png" width="32" style="vertical-align: middle;"> ${highScore}`;
     return;
   }
 
