@@ -176,3 +176,20 @@ by **Felipe Schaitel**
 - 🕹️ Stylized retro buttons and text using pixel font and vibrant arcade colors
 - 🌊 Stronger visual coherence with updated pixel art sprites and retro aesthetics
 
+🆕 Update v1.5.1 – Progressive Obstacle Spawn & Life Item Tweaks (2025-04-01)
+⚙️ Gameplay Balancing
+🌊 Obstacle spawn rate now scales with score:
+
+Every 100 points (score < 5000)
+
+Every 80 points (score 5000–10000)
+
+Every 60 points (score > 10000)
+→ Increases difficulty as you progress.
+
+🍍 Life item frequency reduced:
+
+Now appears every 8000 points (was 10000)
+
+❤️ Maximum lives capped at 3 (was 5)
+→ Encourages more strategic gameplay and increases tension.
