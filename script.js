@@ -26,8 +26,8 @@ let skipNextObstacle = false;
 let keys = {};
 
 let lifeItem = null;
-const LIFE_ITEM_INTERVAL = 10000;
-const MAX_LIVES = 5;
+const LIFE_ITEM_INTERVAL = 8000;
+const MAX_LIVES = 3;
 let lastLifeItemScore = 0;
 
 // Imagens
@@ -73,12 +73,20 @@ function createObstacle() {
   const minY = canvas.height / 2;
   const maxY = canvas.height - height;
   const y = minY + Math.random() * (maxY - minY);
+
+  const baseSpeed = 3;
+  const difficultyFactor = Math.min(score / 2000, 5); // vai até +5
+  const speed = baseSpeed + Math.random() * difficultyFactor;
+
+  console.log("🌊 New wave speed:", speed.toFixed(2));
+
   obstacles.push({
     x: canvas.width,
     y: y,
     width: height,
     height: height,
-    isSeaKing: false
+    isSeaKing: false,
+    speed: speed
   });
 }
 
@@ -106,7 +114,7 @@ function drawObstacles() {
 
 function updateObstacles() {
   for (let obs of obstacles) {
-    obs.x -= 4;
+    obs.x -= obs.speed || 4;
   }
   obstacles = obstacles.filter(obs => obs.x + obs.width > 0);
 }
@@ -122,7 +130,6 @@ function detectCollision() {
     const obsWidth = obs.width - paddingSides * 2;
     const obsHeight = obs.height - paddingTop;
 
-    // Reduz hitbox do navio pela parte superior
     const shipPaddingTop = 20;
     const shipX = ship.x;
     const shipY = ship.y + shipPaddingTop;
@@ -253,13 +260,22 @@ function gameLoop() {
   updateLifeItem();
 
   score++;
-  if (score % 100 === 0) {
+
+  let obstacleFrequency = 100;
+  if (score > 10000) {
+    obstacleFrequency = 60;
+  } else if (score > 5000) {
+    obstacleFrequency = 80;
+  }
+
+  if (score % obstacleFrequency === 0) {
     if (!skipNextObstacle) {
       createObstacle();
     } else {
       skipNextObstacle = false;
     }
   }
+
   if (score - lastSeaKingSpawn >= 1450) {
     createSeaKing();
     lastSeaKingSpawn = score;
