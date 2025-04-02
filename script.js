@@ -58,6 +58,11 @@ bossImage.src = 'assets/navy-boss.png';
 const cannonballImage = new Image();
 cannonballImage.src = 'assets/cannonball.png';
 
+const bossMusic = new Audio('assets/boss-theme.mp3');
+bossMusic.loop = true;
+
+let musicSwitched = false;
+
 const bgMusic = document.getElementById('bg-music');
 const introVideo = document.getElementById('intro-video');
 const startScreen = document.getElementById('start-screen');
@@ -312,6 +317,13 @@ function gameLoop() {
 
   if (score - lastLifeItemScore >= LIFE_ITEM_INTERVAL && lives < MAX_LIVES) {
     createLifeItem(); lastLifeItemScore = score;
+  }
+
+  if (!musicSwitched && score >= 6000) {
+    bgMusic.pause();
+    bossMusic.volume = 0.3;
+    bossMusic.play();
+    musicSwitched = true;
   }
 
   requestAnimationFrame(gameLoop);
