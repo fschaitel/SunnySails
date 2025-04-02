@@ -211,19 +211,27 @@ function startBossBattle() {
 
 function updateBoss() {
   if (!bossShip) return;
+
   const waterMin = canvas.height / 2;
   const waterMax = canvas.height - bossShip.height;
+
+  const elapsed = (Date.now() - bossStartTime) / 1000;
+
+  // Entrada inicial
   if (!bossHasEntered) {
     bossShip.x -= 2;
     if (bossShip.x <= canvas.width - bossShip.width - 20) {
       bossHasEntered = true;
     }
   }
-  if (bossHasEntered) {
+
+  // Movimento e tiros do boss
+  if (bossHasEntered && elapsed < 15) { // atira por 15 segundos
     bossShip.y += bossShip.speedY * bossShip.direction;
     if (bossShip.y <= waterMin || bossShip.y >= waterMax) {
       bossShip.direction *= -1;
     }
+
     bossCooldown--;
     if (bossCooldown <= 0) {
       bossBullets.push({
@@ -236,8 +244,15 @@ function updateBoss() {
       bossCooldown = 30;
     }
   }
-  const elapsed = (Date.now() - bossStartTime) / 1000;
-  if (elapsed >= 20) {
+
+  // Pausa entre os tiros e a saída
+  if (elapsed >= 15 && elapsed < 18) {
+    // boss para de atirar e fica parado
+    // (sem movimento durante esse tempo)
+  }
+
+  // Fase de saída (movimento rápido para esquerda)
+  if (elapsed >= 18) {
     bossShip.x -= 4;
     if (bossShip.x + bossShip.width < 0) {
       bossActive = false;
