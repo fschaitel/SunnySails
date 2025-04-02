@@ -245,14 +245,16 @@ function updateBoss() {
     }
   }
 
-  // Pausa entre os tiros e a saída
-  if (elapsed >= 15 && elapsed < 18) {
-    // boss para de atirar e fica parado
-    // (sem movimento durante esse tempo)
-  }
+// Pausa entre os tiros e a saída
 
   // Fase de saída (movimento rápido para esquerda)
   if (elapsed >= 18) {
+    const garpBanner = document.getElementById('garp-banner');
+    const luffyBanner = document.getElementById('luffy-banner');
+  
+    if (garpBanner) garpBanner.style.display = 'none';
+    if (luffyBanner) luffyBanner.style.display = 'none';
+
     bossShip.x -= 4;
     if (bossShip.x + bossShip.width < 0) {
       bossActive = false;
@@ -260,10 +262,12 @@ function updateBoss() {
       bossBullets = [];
       bossHasEntered = false;
       canvas.style.display = 'none';
+
       const victory = document.getElementById('victory-screen');
       if (victory) {
         victory.style.display = 'flex';
       }
+
       bossMusic.pause();
     }
   }
@@ -330,7 +334,7 @@ function gameLoop() {
   drawMysteryImage();
 
   score++;
-  if (score === 6050) {
+  if (score === 6100) {
     showMysteryImage = true;
     mysteryStartTime = Date.now();
   }
@@ -339,6 +343,32 @@ function gameLoop() {
   if (!bossActive && score % freq === 0) {
     if (!skipNextObstacle) createObstacle(); else skipNextObstacle = false;
   }
+
+// Mostra o diálogo entre Garp e Luffy quando score estiver entre 7000 e 8000
+if (score >= 7000 && score < 8000) {
+  const garpBanner = document.getElementById('garp-banner');
+  const luffyBanner = document.getElementById('luffy-banner');
+
+  if (garpBanner && garpBanner.style.display === 'none') {
+    garpBanner.style.display = 'flex';
+  }
+
+  if (luffyBanner && luffyBanner.style.display === 'none') {
+    luffyBanner.style.display = 'flex';
+  }
+} else {
+  // Oculta os banners fora desse intervalo
+  const garpBanner = document.getElementById('garp-banner');
+  const luffyBanner = document.getElementById('luffy-banner');
+
+  if (garpBanner && garpBanner.style.display !== 'none') {
+    garpBanner.style.display = 'none';
+  }
+
+  if (luffyBanner && luffyBanner.style.display !== 'none') {
+    luffyBanner.style.display = 'none';
+  }
+}
 
   if (score >= 8000 && !bossActive && !bossShip) startBossBattle();
 
@@ -352,7 +382,7 @@ function gameLoop() {
     createLifeItem(); lastLifeItemScore = score;
   }
 
-  if (!musicSwitched && score >= 6100) {
+  if (!musicSwitched && score >= 6200) {
     bgMusic.pause();
     bossMusic.volume = 0.3;
     bossMusic.play();
