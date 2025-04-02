@@ -59,6 +59,7 @@ canvas {
   margin: 0 auto;
 }
 
+#crew-banner,
 #garp-banner,
 #luffy-banner {
   width: 100%;
@@ -75,6 +76,7 @@ canvas {
   position: relative;
 }
 
+#crew-banner img,
 #garp-banner img,
 #luffy-banner img {
   width: 48px;
