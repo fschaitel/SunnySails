@@ -1,4 +1,4 @@
-// Sunny Sails – script.js (com BOSS aparecendo pela direita visível e cannonball com sprite)
+// Sunny Sails – script.js (com BOSS, mistério aos 6050 pontos e tudo funcionando)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -58,6 +58,12 @@ bossImage.src = 'assets/navy-boss.png';
 const cannonballImage = new Image();
 cannonballImage.src = 'assets/cannonball.png';
 
+const mysteryImage = new Image();
+mysteryImage.src = 'assets/mystery.png';
+
+let showMysteryImage = false;
+let mysteryStartTime = null;
+
 const bossMusic = new Audio('assets/boss-theme.mp3');
 bossMusic.loop = true;
 
@@ -82,6 +88,21 @@ function drawShip() {
   if (!blinking || Math.floor(Date.now() / 100) % 2 === 0) {
     ctx.drawImage(shipImage, ship.x, ship.y, ship.width, ship.height);
   }
+}
+
+function drawMysteryImage() {
+  const duration = 2000;
+  if (!showMysteryImage || !mysteryStartTime) return;
+  const elapsed = Date.now() - mysteryStartTime;
+  if (elapsed > duration) {
+    showMysteryImage = false;
+    return;
+  }
+  const baseX = canvas.width - 90;
+  const baseY = 10;
+  const shakeX = baseX + (Math.random() * 10 - 5);
+  const shakeY = baseY + (Math.random() * 10 - 5);
+  ctx.drawImage(mysteryImage, shakeX, shakeY, 80, 80);
 }
 
 function updateMovement() {
@@ -175,10 +196,8 @@ function startBossBattle() {
   bossActive = true;
   bossStartTime = Date.now();
   bossHasEntered = false;
-
   const waterMin = canvas.height / 2;
   const waterMax = canvas.height - 80;
-
   bossShip = {
     x: canvas.width,
     y: waterMin + Math.random() * (waterMax - waterMin),
@@ -192,23 +211,19 @@ function startBossBattle() {
 
 function updateBoss() {
   if (!bossShip) return;
-
   const waterMin = canvas.height / 2;
   const waterMax = canvas.height - bossShip.height;
-
   if (!bossHasEntered) {
     bossShip.x -= 2;
     if (bossShip.x <= canvas.width - bossShip.width - 20) {
       bossHasEntered = true;
     }
   }
-
   if (bossHasEntered) {
     bossShip.y += bossShip.speedY * bossShip.direction;
     if (bossShip.y <= waterMin || bossShip.y >= waterMax) {
       bossShip.direction *= -1;
     }
-
     bossCooldown--;
     if (bossCooldown <= 0) {
       bossBullets.push({
@@ -221,7 +236,6 @@ function updateBoss() {
       bossCooldown = 30;
     }
   }
-
   const elapsed = (Date.now() - bossStartTime) / 1000;
   if (elapsed >= 20) {
     bossShip.x -= 4;
@@ -230,16 +244,12 @@ function updateBoss() {
       bossShip = null;
       bossBullets = [];
       bossHasEntered = false;
-
-      // Mostra a tela de vitória
       canvas.style.display = 'none';
       const victory = document.getElementById('victory-screen');
       if (victory) {
         victory.style.display = 'flex';
-      } else {
-        console.warn("Elemento 'victory-screen' não encontrado.");
       }
-      bossMusic.pause();      
+      bossMusic.pause();
     }
   }
 }
@@ -290,7 +300,6 @@ function gameLoop() {
     document.getElementById('best-score').innerHTML = `<img src="assets/berry.png" width="32" style="vertical-align:middle; margin-right:6px;">Best Score: ${highScore}`;
     return;
   }
-
   drawBackground();
   drawShip();
 
@@ -303,7 +312,13 @@ function gameLoop() {
   }
 
   drawScore(); drawLives(); drawLifeItem(); updateLifeItem();
+  drawMysteryImage();
+
   score++;
+  if (score === 6050) {
+    showMysteryImage = true;
+    mysteryStartTime = Date.now();
+  }
 
   let freq = score > 6000 ? 60 : score > 2000 ? 80 : 100;
   if (!bossActive && score % freq === 0) {
@@ -313,14 +328,7 @@ function gameLoop() {
   if (score >= 8000 && !bossActive && !bossShip) startBossBattle();
 
   if (score - lastSeaKingSpawn >= 1500 && !bossActive) {
-    obstacles.push({
-      x: canvas.width,
-      y: canvas.height - 140,
-      width: 120,
-      height: 120,
-      isSeaKing: true,
-      speed: 3
-    });
+    obstacles.push({ x: canvas.width, y: canvas.height - 140, width: 120, height: 120, isSeaKing: true, speed: 3 });
     lastSeaKingSpawn = score;
     skipNextObstacle = true;
   }
@@ -355,63 +363,3 @@ startButton.addEventListener('click', () => {
 
 document.addEventListener('keydown', (e) => keys[e.key] = true);
 document.addEventListener('keyup', (e) => keys[e.key] = false);
-
-document.getElementById('restart-button').addEventListener('click', () => {
-  ship.x = 50;
-  ship.y = canvas.height - 120;
-  obstacles = [];
-  gameOver = false;
-  score = 0;
-  lives = 3;
-  blinking = false;
-  invincible = false;
-  lastSeaKingSpawn = 0;
-  skipNextObstacle = false;
-  lifeItem = null;
-  lastLifeItemScore = -1;
-  bossActive = false;
-  bossShip = null;
-  bossBullets = [];
-  bossHasEntered = false;
-  document.getElementById('final-score').textContent = '';
-  document.getElementById('best-score').textContent = '';
-  document.getElementById('game-over-screen').style.display = 'none';
-  canvas.style.display = 'block';
-  createObstacle();
-  gameLoop();
-});
-
-window.onload = () => {
-  const victoryScreen = document.getElementById('victory-screen');
-  const continueButton = document.getElementById('continue-button');
-
-  if (continueButton) {
-    continueButton.addEventListener('click', () => {
-      victoryScreen.style.display = 'none';
-      document.getElementById('start-screen').style.display = 'flex';
-
-      ship.x = 50;
-      ship.y = canvas.height - 120;
-      obstacles = [];
-      gameOver = false;
-      score = 0;
-      lives = 3;
-      blinking = false;
-      invincible = false;
-      lastSeaKingSpawn = 0;
-      skipNextObstacle = false;
-      lifeItem = null;
-      lastLifeItemScore = -1;
-      bossActive = false;
-      bossShip = null;
-      bossBullets = [];
-      bossHasEntered = false;
-      musicSwitched = false;
-
-      bgMusic.currentTime = 0;
-      bgMusic.play();
-    });
-  } else {
-    console.warn("Botão 'CONTINUAR' não foi encontrado no DOM.");
-  }
-};
