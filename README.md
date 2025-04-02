@@ -1,5 +1,3 @@
-![Sunny Banner](./docs/sunny.png)
-
 # 🌞 Sunny Sails
 
 **Sunny Run** is a retro-inspired 2D runner game made with HTML, CSS, and JavaScript.  
