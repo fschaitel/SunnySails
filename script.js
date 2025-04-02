@@ -1,19 +1,13 @@
+// Sunny Sails – script.js (com BOSS aparecendo pela direita visível e cannonball com sprite)
+
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-
 canvas.width = 800;
 canvas.height = 400;
 
-const SKY_LIMIT = 190;
+const SKY_LIMIT = 175;
 
-let ship = {
-  x: 50,
-  y: canvas.height - 120,
-  width: 80,
-  height: 80,
-  speed: 5
-};
-
+let ship = { x: 50, y: canvas.height - 120, width: 80, height: 80, speed: 5 };
 let obstacles = [];
 let gameOver = false;
 let score = 0;
@@ -26,11 +20,17 @@ let skipNextObstacle = false;
 let keys = {};
 
 let lifeItem = null;
-const LIFE_ITEM_INTERVAL = 5000;
+const LIFE_ITEM_INTERVAL = 4000;
 const MAX_LIVES = 3;
-let lastLifeItemScore = 0;
+let lastLifeItemScore = -1;
 
-// Imagens
+let bossActive = false;
+let bossStartTime = null;
+let bossShip = null;
+let bossBullets = [];
+let bossCooldown = 0;
+let bossHasEntered = false;
+
 const bgImage = new Image();
 bgImage.src = 'assets/ocean-bg-light.png';
 
@@ -42,7 +42,6 @@ waveImage.src = 'assets/wave.png';
 
 const seaKingImage = new Image();
 seaKingImage.src = 'assets/sea-king.png';
-seaKingImage.onerror = () => console.warn;
 
 const lifeImage = new Image();
 lifeImage.src = 'assets/akuma-nomi.png';
@@ -52,6 +51,17 @@ hatImage.src = 'assets/straw-hat.png';
 
 const berryImage = new Image();
 berryImage.src = 'assets/berry.png';
+
+const bossImage = new Image();
+bossImage.src = 'assets/navy-boss.png';
+
+const cannonballImage = new Image();
+cannonballImage.src = 'assets/cannonball.png';
+
+const bgMusic = document.getElementById('bg-music');
+const introVideo = document.getElementById('intro-video');
+const startScreen = document.getElementById('start-screen');
+const startButton = document.getElementById('start-button');
 
 let bgX = 0;
 let bgSpeed = 0.5;
@@ -69,99 +79,11 @@ function drawShip() {
   }
 }
 
-function createObstacle() {
-  const minHeight = 40;
-  const maxHeight = 80;
-  const height = minHeight + Math.random() * (maxHeight - minHeight);
-  const minY = canvas.height / 2;
-  const maxY = canvas.height - height;
-  const y = minY + Math.random() * (maxY - minY);
-
-  const baseSpeed = 3;
-  const difficultyFactor = Math.min(score / 2000, 5);
-  const speed = baseSpeed + Math.random() * difficultyFactor;
-
-  console.log("🌊 New wave speed:", speed.toFixed(2));
-
-  obstacles.push({
-    x: canvas.width,
-    y: y,
-    width: height,
-    height: height,
-    isSeaKing: false,
-    speed: speed
-  });
-}
-
-function createSeaKing() {
-  obstacles.push({
-    x: canvas.width,
-    y: canvas.height - 140,
-    width: 120,
-    height: 120,
-    isSeaKing: true
-  });
-  ship.speed = Math.min(ship.speed + 0.5, 10);
-  skipNextObstacle = true;
-}
-
-function drawObstacles() {
-  for (let obs of obstacles) {
-    if (obs.isSeaKing) {
-      ctx.drawImage(seaKingImage, obs.x, obs.y, obs.width, obs.height);
-    } else {
-      ctx.drawImage(waveImage, obs.x, obs.y, obs.width, obs.height);
-    }
-  }
-}
-
-function updateObstacles() {
-  for (let obs of obstacles) {
-    obs.x -= obs.speed || 4;
-  }
-  obstacles = obstacles.filter(obs => obs.x + obs.width > 0);
-}
-
-function detectCollision() {
-  if (invincible) return;
-
-  for (let obs of obstacles) {
-    const paddingTop = obs.isSeaKing ? 60 : 45;
-    const paddingSides = obs.isSeaKing ? 40 : 22;
-    const obsX = obs.x + paddingSides;
-    const obsY = obs.y + paddingTop;
-    const obsWidth = obs.width - paddingSides * 2;
-    const obsHeight = obs.height - paddingTop;
-
-    const shipPaddingTop = 20;
-    const shipX = ship.x;
-    const shipY = ship.y + shipPaddingTop;
-    const shipWidth = ship.width;
-    const shipHeight = ship.height - shipPaddingTop;
-
-    if (
-      shipX < obsX + obsWidth &&
-      shipX + shipWidth > obsX &&
-      shipY < obsY + obsHeight &&
-      shipY + shipHeight > obsY
-    ) {
-      lives--;
-      triggerBlink();
-      if (lives <= 0-1) {
-        gameOver = true;
-      }
-      break;
-    }
-  }
-}
-
-function triggerBlink() {
-  blinking = true;
-  invincible = true;
-  setTimeout(() => {
-    blinking = false;
-    invincible = false;
-  }, 1100);
+function updateMovement() {
+  if (keys['ArrowUp'] && ship.y > SKY_LIMIT) ship.y -= ship.speed;
+  if (keys['ArrowDown'] && ship.y + ship.height < canvas.height) ship.y += ship.speed;
+  if (keys['ArrowRight'] && ship.x + ship.width < canvas.width) ship.x += ship.speed;
+  if (keys['ArrowLeft'] && ship.x > 0) ship.x -= ship.speed;
 }
 
 function drawScore() {
@@ -176,53 +98,55 @@ function drawLives() {
   const size = 24;
   const gap = 10;
   for (let i = 0; i < lives; i++) {
-    ctx.drawImage(
-      hatImage,
-      canvas.width - (size + gap) * (i + 1),
-      10,
-      size,
-      size
-    );
+    ctx.drawImage(hatImage, canvas.width - (size + gap) * (i + 1), 10, size, size);
   }
 }
 
-function updateMovement() {
-  if (keys['ArrowUp'] && ship.y > SKY_LIMIT) {
-    ship.y -= ship.speed;
+function createObstacle() {
+  const h = 40 + Math.random() * 40;
+  const y = canvas.height / 2 + Math.random() * (canvas.height / 2 - h);
+  const speed = 3 + Math.random() * Math.min(score / 2000, 5);
+  obstacles.push({ x: canvas.width, y, width: h, height: h, isSeaKing: false, speed });
+}
+
+function drawObstacles() {
+  for (let o of obstacles) {
+    ctx.drawImage(o.isSeaKing ? seaKingImage : waveImage, o.x, o.y, o.width, o.height);
   }
-  if (keys['ArrowDown'] && ship.y + ship.height < canvas.height) {
-    ship.y += ship.speed;
-  }
-  if (keys['ArrowRight'] && ship.x + ship.width < canvas.width) {
-    ship.x += ship.speed;
-  }
-  if (keys['ArrowLeft'] && ship.x > 0) {
-    ship.x -= ship.speed;
+}
+
+function updateObstacles() {
+  for (let o of obstacles) o.x -= o.speed || 4;
+  obstacles = obstacles.filter(o => o.x + o.width > 0);
+}
+
+function detectCollision() {
+  if (invincible) return;
+  for (let o of obstacles) {
+    const pT = o.isSeaKing ? 60 : 45, pS = o.isSeaKing ? 40 : 22;
+    const oX = o.x + pS, oY = o.y + pT, oW = o.width - pS * 2, oH = o.height - pT;
+    const sX = ship.x, sY = ship.y + 20, sW = ship.width, sH = ship.height - 20;
+    if (sX < oX + oW && sX + sW > oX && sY < oY + oH && sY + sH > oY) {
+      lives--; triggerBlink();
+      if (lives <= 0) gameOver = true;
+      break;
+    }
   }
 }
 
 function createLifeItem() {
-  const size = 32;
-  const x = canvas.width;
+  const size = 32, x = canvas.width;
   const y = SKY_LIMIT + Math.random() * (canvas.height - SKY_LIMIT - size);
-  lifeItem = {
-    x,
-    y,
-    size,
-    collected: false
-  };
+  lifeItem = { x, y, size, collected: false };
 }
 
 function drawLifeItem() {
-  if (lifeItem && !lifeItem.collected) {
-    ctx.drawImage(lifeImage, lifeItem.x, lifeItem.y, lifeItem.size, lifeItem.size);
-  }
+  if (lifeItem && !lifeItem.collected) ctx.drawImage(lifeImage, lifeItem.x, lifeItem.y, lifeItem.size, lifeItem.size);
 }
 
 function updateLifeItem() {
   if (lifeItem && !lifeItem.collected) {
     lifeItem.x -= 3;
-
     if (
       ship.x < lifeItem.x + lifeItem.size &&
       ship.x + ship.width > lifeItem.x &&
@@ -232,16 +156,114 @@ function updateLifeItem() {
       lifeItem.collected = true;
       if (lives < MAX_LIVES) lives++;
     }
+    if (lifeItem.x + lifeItem.size < 0) lifeItem = null;
+  }
+}
 
-    if (lifeItem.x + lifeItem.size < 0) {
-      lifeItem = null;
+function triggerBlink() {
+  blinking = true;
+  invincible = true;
+  setTimeout(() => { blinking = false; invincible = false; }, 1100);
+}
+
+function startBossBattle() {
+  bossActive = true;
+  bossStartTime = Date.now();
+  bossHasEntered = false;
+
+  const waterMin = canvas.height / 2;
+  const waterMax = canvas.height - 80;
+
+  bossShip = {
+    x: canvas.width,
+    y: waterMin + Math.random() * (waterMax - waterMin),
+    width: 120,
+    height: 80,
+    speedY: 3,
+    direction: 1
+  };
+  obstacles = [];
+}
+
+function updateBoss() {
+  if (!bossShip) return;
+
+  const waterMin = canvas.height / 2;
+  const waterMax = canvas.height - bossShip.height;
+
+  if (!bossHasEntered) {
+    bossShip.x -= 2;
+    if (bossShip.x <= canvas.width - bossShip.width - 20) {
+      bossHasEntered = true;
+    }
+  }
+
+  if (bossHasEntered) {
+    bossShip.y += bossShip.speedY * bossShip.direction;
+    if (bossShip.y <= waterMin || bossShip.y >= waterMax) {
+      bossShip.direction *= -1;
+    }
+
+    bossCooldown--;
+    if (bossCooldown <= 0) {
+      bossBullets.push({
+        x: bossShip.x,
+        y: bossShip.y + bossShip.height / 2,
+        width: 20,
+        height: 20,
+        speed: 6
+      });
+      bossCooldown = 30;
+    }
+  }
+
+  const elapsed = (Date.now() - bossStartTime) / 1000;
+  if (elapsed >= 20) {
+    bossShip.x -= 4;
+    if (bossShip.x + bossShip.width < 0) {
+      bossActive = false;
+      bossShip = null;
+      bossBullets = [];
+      bossHasEntered = false;
+    }
+  }
+}
+
+function drawBoss() {
+  if (!bossShip || !bossImage.complete) return;
+  ctx.drawImage(bossImage, bossShip.x, bossShip.y, bossShip.width, bossShip.height);
+}
+
+function drawBossBullets() {
+  for (let b of bossBullets) {
+    ctx.drawImage(cannonballImage, b.x, b.y, b.width, b.height);
+  }
+}
+
+function updateBossBullets() {
+  for (let b of bossBullets) b.x -= b.speed;
+  bossBullets = bossBullets.filter(b => b.x + b.width > 0);
+}
+
+function detectBossBulletCollision() {
+  if (invincible) return;
+  for (let b of bossBullets) {
+    const p = 2;
+    if (
+      ship.x < b.x + b.width - p &&
+      ship.x + ship.width > b.x + p &&
+      ship.y < b.y + b.height - p &&
+      ship.y + ship.height > b.y + p
+    ) {
+      lives--; triggerBlink(); b.x = -100;
+      if (lives <= 0) gameOver = true;
+      break;
     }
   }
 }
 
 function gameLoop() {
   updateMovement();
-
   if (gameOver) {
     if (score > highScore) {
       highScore = score;
@@ -256,57 +278,52 @@ function gameLoop() {
 
   drawBackground();
   drawShip();
-  drawObstacles();
-  updateObstacles();
-  detectCollision();
-  drawScore();
-  drawLives();
-  drawLifeItem();
-  updateLifeItem();
 
+  if (bossActive) {
+    updateBoss(); drawBoss();
+    updateBossBullets(); drawBossBullets();
+    detectBossBulletCollision();
+  } else {
+    drawObstacles(); updateObstacles(); detectCollision();
+  }
+
+  drawScore(); drawLives(); drawLifeItem(); updateLifeItem();
   score++;
 
-  let obstacleFrequency = 100;
-  if (score > 6000) {
-    obstacleFrequency = 60;
-  } else if (score > 2000) {
-    obstacleFrequency = 80;
+  let freq = score > 6000 ? 60 : score > 2000 ? 80 : 100;
+  if (!bossActive && score % freq === 0) {
+    if (!skipNextObstacle) createObstacle(); else skipNextObstacle = false;
   }
 
-  if (score % obstacleFrequency === 0) {
-    if (!skipNextObstacle) {
-      createObstacle();
-    } else {
-      skipNextObstacle = false;
-    }
-  }
+  if (score >= 8000 && !bossActive && !bossShip) startBossBattle();
 
-  if (score - lastSeaKingSpawn >= 1443) {
-    createSeaKing();
+  if (score - lastSeaKingSpawn >= 1500 && !bossActive) {
+    obstacles.push({
+      x: canvas.width,
+      y: canvas.height - 140,
+      width: 120,
+      height: 120,
+      isSeaKing: true,
+      speed: 3
+    });
     lastSeaKingSpawn = score;
+    skipNextObstacle = true;
   }
+
   if (score - lastLifeItemScore >= LIFE_ITEM_INTERVAL && lives < MAX_LIVES) {
-    createLifeItem();
-    lastLifeItemScore = score;
+    createLifeItem(); lastLifeItemScore = score;
   }
 
   requestAnimationFrame(gameLoop);
 }
 
-const startScreen = document.getElementById('start-screen');
-const startButton = document.getElementById('start-button');
-const bgMusic = document.getElementById('bg-music');
-
 startButton.addEventListener('click', () => {
-  const introVideo = document.getElementById('intro-video');
-
   startScreen.style.display = 'none';
   introVideo.style.display = 'block';
   bgMusic.volume = 0.2;
   bgMusic.play();
   introVideo.play();
-
-  introVideo.onended = function () {
+  introVideo.onended = () => {
     introVideo.style.display = 'none';
     canvas.style.display = 'block';
     createObstacle();
@@ -314,12 +331,8 @@ startButton.addEventListener('click', () => {
   };
 });
 
-document.addEventListener('keydown', (e) => {
-  keys[e.key] = true;
-});
-document.addEventListener('keyup', (e) => {
-  keys[e.key] = false;
-});
+document.addEventListener('keydown', (e) => keys[e.key] = true);
+document.addEventListener('keyup', (e) => keys[e.key] = false);
 
 document.getElementById('restart-button').addEventListener('click', () => {
   ship.x = 50;
@@ -333,10 +346,15 @@ document.getElementById('restart-button').addEventListener('click', () => {
   lastSeaKingSpawn = 0;
   skipNextObstacle = false;
   lifeItem = null;
-  lastLifeItemScore = 0;
+  lastLifeItemScore = -1;
+  bossActive = false;
+  bossShip = null;
+  bossBullets = [];
+  bossHasEntered = false;
   document.getElementById('final-score').textContent = '';
   document.getElementById('best-score').textContent = '';
   document.getElementById('game-over-screen').style.display = 'none';
   canvas.style.display = 'block';
+  createObstacle();
   gameLoop();
 });
