@@ -230,6 +230,16 @@ function updateBoss() {
       bossShip = null;
       bossBullets = [];
       bossHasEntered = false;
+
+      // Mostra a tela de vitória
+      canvas.style.display = 'none';
+      const victory = document.getElementById('victory-screen');
+      if (victory) {
+        victory.style.display = 'flex';
+      } else {
+        console.warn("Elemento 'victory-screen' não encontrado.");
+      }
+      bossMusic.pause();      
     }
   }
 }
@@ -370,3 +380,38 @@ document.getElementById('restart-button').addEventListener('click', () => {
   createObstacle();
   gameLoop();
 });
+
+window.onload = () => {
+  const victoryScreen = document.getElementById('victory-screen');
+  const continueButton = document.getElementById('continue-button');
+
+  if (continueButton) {
+    continueButton.addEventListener('click', () => {
+      victoryScreen.style.display = 'none';
+      document.getElementById('start-screen').style.display = 'flex';
+
+      ship.x = 50;
+      ship.y = canvas.height - 120;
+      obstacles = [];
+      gameOver = false;
+      score = 0;
+      lives = 3;
+      blinking = false;
+      invincible = false;
+      lastSeaKingSpawn = 0;
+      skipNextObstacle = false;
+      lifeItem = null;
+      lastLifeItemScore = -1;
+      bossActive = false;
+      bossShip = null;
+      bossBullets = [];
+      bossHasEntered = false;
+      musicSwitched = false;
+
+      bgMusic.currentTime = 0;
+      bgMusic.play();
+    });
+  } else {
+    console.warn("Botão 'CONTINUAR' não foi encontrado no DOM.");
+  }
+};
