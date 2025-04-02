@@ -4,7 +4,7 @@ const ctx = canvas.getContext('2d');
 canvas.width = 800;
 canvas.height = 400;
 
-const SKY_LIMIT = 180;
+const SKY_LIMIT = 190;
 
 let ship = {
   x: 50,
@@ -26,7 +26,7 @@ let skipNextObstacle = false;
 let keys = {};
 
 let lifeItem = null;
-const LIFE_ITEM_INTERVAL = 8000;
+const LIFE_ITEM_INTERVAL = 5000;
 const MAX_LIVES = 3;
 let lastLifeItemScore = 0;
 
@@ -42,7 +42,7 @@ waveImage.src = 'assets/wave.png';
 
 const seaKingImage = new Image();
 seaKingImage.src = 'assets/sea-king.png';
-seaKingImage.onerror = () => console.warn('⚠️ sea-king.png não foi carregado');
+seaKingImage.onerror = () => console.warn;
 
 const lifeImage = new Image();
 lifeImage.src = 'assets/akuma-nomi.png';
@@ -147,7 +147,7 @@ function detectCollision() {
     ) {
       lives--;
       triggerBlink();
-      if (lives <= 0) {
+      if (lives <= 0-1) {
         gameOver = true;
       }
       break;
@@ -161,7 +161,7 @@ function triggerBlink() {
   setTimeout(() => {
     blinking = false;
     invincible = false;
-  }, 1000);
+  }, 1100);
 }
 
 function drawScore() {
@@ -267,9 +267,9 @@ function gameLoop() {
   score++;
 
   let obstacleFrequency = 100;
-  if (score > 10000) {
+  if (score > 6000) {
     obstacleFrequency = 60;
-  } else if (score > 5000) {
+  } else if (score > 2000) {
     obstacleFrequency = 80;
   }
 
@@ -281,7 +281,7 @@ function gameLoop() {
     }
   }
 
-  if (score - lastSeaKingSpawn >= 1450) {
+  if (score - lastSeaKingSpawn >= 1443) {
     createSeaKing();
     lastSeaKingSpawn = score;
   }
