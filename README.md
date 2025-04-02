@@ -31,22 +31,26 @@ It's a personal experiment — my first full game project — blending pixel art
 
 - The game starts with a **black & white intro screen** and a **START button**
 - Upon clicking START:
-  - The canvas is revealed
+  - An **intro video** plays
   - The background music begins to play in a loop
   - The player controls the ship "Sunny" using the arrow keys
 - **↑ / ↓** move the ship vertically (but it can't go into the sky!)
 - **← / →** move the ship horizontally across the screen
 - **Waves** appear as obstacles from the right in randomized positions and sizes
-- Colliding with a wave ends the game with a **white "GAME OVER"** message
+- Colliding with a wave or cannonball causes damage. Lose all lives = **GAME OVER**
+- Reach 10.000 points to face the **Navy Boss**
+- Defeat the boss to reach the **Victory Screen**
 
 ---
 
 ## ▶️ How to Play
 
 - Press `START`
+- Watch the intro video
 - Use `↑ ↓ ← →` arrow keys to steer the ship
-- Avoid the waves!
-- The longer you survive, the higher your score
+- Avoid waves, Sea Kings, and cannonballs!
+- Grab life items (max 3 lives)
+- Survive and reach 10.000 points to fight the boss
 
 ---
 
@@ -59,27 +63,47 @@ This project covers core game development concepts:
 - Basic physics and movement
 - Random obstacle generation
 - Collision detection with hitbox padding
-- UI flow (start → play → game over)
-- Audio integration with JS
+- UI flow (start → intro → play → boss → game over / victory)
+- Audio and video integration
 
 ---
 
+## 🔹 Version History
+
+### 🔎 v1.7.0 – Navy Boss, Victory Ending & Easter Egg (2025-04-02)
+- 🚢 Navy Boss appears at **10.000 points**, shoots cannonballs
+- 🏴‍☠️ Victory screen after defeating the boss
+- ❓ Mystery image appears at 6100 points with shake effect
+- 💙 Garp & Luffy dialog between 7000-8000 points
+
+#### Balance & Tweaks
+- Obstacle frequency scales with score (100 → 80 → 60)
+- Life item appears every 8000 points (was 10000)
+- Max lives capped at 3 (was 5)
+
+### 🔎 v1.5.1 – Progressive Obstacle Spawn & Life Item Tweaks (2025-04-01)
+- Obstacle spawn rate now scales with score
+- Life item frequency reduced; max lives capped at 3
+
+### 🔎 v1.4.1 – Enhanced 8-bit UI (2025-03-30)
+- Redesigned START & GAME OVER screens with pixel backgrounds
+- Pixel font and arcade color schemes for buttons
+
+### 🔎 v1.4.0 – Intro Video & Music Sync (2025-03-30)
+- Added video intro synced with background music
+- Game starts only after video ends
+
+### 🔎 v1.3.0 – Sea King, Diagonal Movement & Speed Boost (2025-03-30)
+- Sea King appears every 1500 points
+- Diagonal movement and speed scaling added
+- Refactored input system and collision logic
+
+### 🔎 v1.1 – Retro Aesthetic & Game Over Screen (2025-03-29)
+- Game Boy style visuals
+- Restart without refresh
+- Smooth parallax background
 
 ---
-
-## 🆕 Update v1.1 - Retro Aesthetic, Game Over Screen & Tweaks (2025-03-29)
-
-### Visual & UI
-- Full **Game Boy-inspired aesthetic**: green monochrome palette and pixel font
-- Updated **start screen** to match retro style
-- New **GAME OVER screen** with final score and **RESTART** button
-
-### Gameplay Changes
-- Waves now **come from the right to the left**
-- **Hitbox reduced** for fairer collisions
-- Background uses **smooth parallax scrolling**
-- Player can **restart the game** after losing without refreshing the page
-
 
 ## 📁 Project Structure
 
@@ -93,7 +117,16 @@ SunnySails/
     ├── ocean-bg-light.png
     ├── sunny-8bit.png
     ├── wave.png
-    └── gb-music.mp3
+    ├── gb-music.mp3
+    ├── sea-king.png
+    ├── navy-boss.png
+    ├── cannonball.png
+    ├── luffy-banner.png
+    ├── garp-banner.png
+    ├── akuma-nomi.png
+    ├── straw-hat.png
+    ├── berry.png
+    └── intro-video.mp4
 ```
 
 ---
@@ -133,63 +166,5 @@ You may reuse the code freely. Please credit or replace visuals/audio if you pla
 
 Created with curiosity and pixel love  
 by **Felipe Schaitel**  
-📅 2025-03-30
+🗓️ 2025-04-02
 
-
-## 🆕 Update v1.3.0 – Sea King, Diagonal Movement & Speed Boost (2025-03-30)
-
-### Gameplay Mechanics
-- 🐉 **Sea King** added as a new boss-style obstacle that appears every **1500 points**
-- ⚡ **Progressive acceleration**: the ship becomes faster with each Sea King encounter (max speed 10)
-- 🎮 **Diagonal movement** using multiple keys (e.g. `↑ + →`) for more fluid control
-- 🎯 **Hitbox adjusted**: Sea King's collision area reduced for fairness
-- 🌊 **Wave conflict prevention**: Sea King and wave cannot spawn at the same time
-- 🔁 Game restart now resets all states without visual glitches
-
-### Code & Performance
-- Full **refactor of movement system** using `keydown` / `keyup` events
-- Cleaned up **syntax bugs and duplication** (`padding`, `break`, extra brackets)
-- Game loop and collision detection **fully stabilized**
-
-## 🆕 Update v1.4.0 – Intro Video & Music Sync (2025-03-30)
-
-### Intro & Audio
-- 🎬 Added an **intro video** (`intro-video.mp4`) that plays when the player clicks START
-- 🔇 The video is **muted by default**, preserving music clarity
-- 🎵 Background music (`gb-music.mp3`) now starts **alongside the video**, not after gameplay begins
-- ⏱️ Game begins **only after the video finishes playing**
-
-### Code Updates
-- Modified `index.html` to include a `<video>` element before the canvas
-- Updated `script.js` to handle:
-  - Playing the intro video and syncing it with the music
-  - Starting the game loop after the video ends
-  - Fallback behavior: if video fails to play, game starts immediately
-
-### Assets
-- New asset: `intro-video.mp4` added to `assets/` directory
-
-- ## 🆕 Update v1.4.1 – Enhanced 8-bit UI (2025-03-30)
-
-### Visual & UI
-- 🖼️ Redesigned **START** and **GAME OVER** screens with 8-bit background (`ocean-bg-light.png`)
-- 🕹️ Stylized retro buttons and text using pixel font and vibrant arcade colors
-- 🌊 Stronger visual coherence with updated pixel art sprites and retro aesthetics
-
-🆕 Update v1.5.1 – Progressive Obstacle Spawn & Life Item Tweaks (2025-04-01)
-⚙️ Gameplay Balancing
-🌊 Obstacle spawn rate now scales with score:
-
-Every 100 points (score < 5000)
-
-Every 80 points (score 5000–10000)
-
-Every 60 points (score > 10000)
-→ Increases difficulty as you progress.
-
-🍍 Life item frequency reduced:
-
-Now appears every 8000 points (was 10000)
-
-❤️ Maximum lives capped at 3 (was 5)
-→ Encourages more strategic gameplay and increases tension.
