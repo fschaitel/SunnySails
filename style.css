@@ -59,6 +59,29 @@ canvas {
   margin: 0 auto;
 }
 
+#garp-banner,
+#luffy-banner {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 12px;
+  border-top: 4px solid #fff;
+  position: relative;
+}
+
+#garp-banner img,
+#luffy-banner img {
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+}
+
 #game-over-screen {
   height: 100vh;
   display: flex;
@@ -131,3 +154,4 @@ canvas {
   border: 3px solid #000;
   cursor: pointer;
 }
+
