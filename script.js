@@ -251,9 +251,11 @@ function updateBoss() {
   if (elapsed >= 18) {
     const garpBanner = document.getElementById('garp-banner');
     const luffyBanner = document.getElementById('luffy-banner');
+    const crewBanner = document.getElementById('crew-banner');
   
     if (garpBanner) garpBanner.style.display = 'none';
     if (luffyBanner) luffyBanner.style.display = 'none';
+    if (crewBanner) crewBanner.style.display = 'none';
 
     bossShip.x -= 4;
     if (bossShip.x + bossShip.width < 0) {
@@ -344,8 +346,8 @@ function gameLoop() {
     if (!skipNextObstacle) createObstacle(); else skipNextObstacle = false;
   }
 
-// Mostra o diálogo entre Garp e Luffy quando score estiver entre 7000 e 8000
-if (score >= 7000 && score < 8000) {
+// Mostra o diálogo entre Garp e Luffy quando score estiver entre 6500 e 7500
+if (score >= 7000 && score < 7700) {
   const garpBanner = document.getElementById('garp-banner');
   const luffyBanner = document.getElementById('luffy-banner');
 
@@ -367,6 +369,21 @@ if (score >= 7000 && score < 8000) {
 
   if (luffyBanner && luffyBanner.style.display !== 'none') {
     luffyBanner.style.display = 'none';
+  }
+}
+
+if (score >= 7600 && score < 8000) {
+  const crewBanner = document.getElementById('crew-banner');
+
+  if (crewBanner && crewBanner.style.display === 'none') {
+    crewBanner.style.display = 'flex';
+  }
+} else {
+  // Oculta os banners fora desse intervalo
+  const crewBanner = document.getElementById('crew-banner');
+
+  if (crewBanner && crewBanner.style.display !== 'none') {
+    crewBanner.style.display = 'none';
   }
 }
 
