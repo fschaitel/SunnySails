@@ -99,7 +99,7 @@ function drawMysteryImage() {
     return;
   }
   const baseX = canvas.width - 90;
-  const baseY = 10;
+  const baseY = 80;
   const shakeX = baseX + (Math.random() * 10 - 5);
   const shakeY = baseY + (Math.random() * 10 - 5);
   ctx.drawImage(mysteryImage, shakeX, shakeY, 80, 80);
