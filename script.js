@@ -20,7 +20,7 @@ let skipNextObstacle = false;
 let keys = {};
 
 let lifeItem = null;
-const LIFE_ITEM_INTERVAL = 4000;
+const LIFE_ITEM_INTERVAL = 3900;
 const MAX_LIVES = 3;
 let lastLifeItemScore = -1;
 
@@ -91,7 +91,7 @@ function drawShip() {
 }
 
 function drawMysteryImage() {
-  const duration = 2000;
+  const duration = 3000;
   if (!showMysteryImage || !mysteryStartTime) return;
   const elapsed = Date.now() - mysteryStartTime;
   if (elapsed > duration) {
@@ -121,7 +121,7 @@ function drawScore() {
 }
 
 function drawLives() {
-  const size = 24;
+  const size = 32;
   const gap = 10;
   for (let i = 0; i < lives; i++) {
     ctx.drawImage(hatImage, canvas.width - (size + gap) * (i + 1), 10, size, size);
@@ -154,7 +154,7 @@ function detectCollision() {
     const sX = ship.x, sY = ship.y + 20, sW = ship.width, sH = ship.height - 20;
     if (sX < oX + oW && sX + sW > oX && sY < oY + oH && sY + sH > oY) {
       lives--; triggerBlink();
-      if (lives <= 0) gameOver = true;
+      if (lives <= 0-1) gameOver = true;
       break;
     }
   }
@@ -281,7 +281,7 @@ function detectBossBulletCollision() {
       ship.y + ship.height > b.y + p
     ) {
       lives--; triggerBlink(); b.x = -100;
-      if (lives <= 0) gameOver = true;
+      if (lives <= 0-1) gameOver = true;
       break;
     }
   }
@@ -320,7 +320,7 @@ function gameLoop() {
     mysteryStartTime = Date.now();
   }
 
-  let freq = score > 6000 ? 60 : score > 2000 ? 80 : 100;
+  let freq = score > 4500 ? 60 : score > 1000 ? 80 : 100;
   if (!bossActive && score % freq === 0) {
     if (!skipNextObstacle) createObstacle(); else skipNextObstacle = false;
   }
@@ -337,7 +337,7 @@ function gameLoop() {
     createLifeItem(); lastLifeItemScore = score;
   }
 
-  if (!musicSwitched && score >= 6000) {
+  if (!musicSwitched && score >= 6100) {
     bgMusic.pause();
     bossMusic.volume = 0.3;
     bossMusic.play();
