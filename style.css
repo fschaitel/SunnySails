@@ -102,3 +102,32 @@ canvas {
   background-color: #ff7777;
 }
 
+#victory-screen {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image: url('assets/ocean-bg-light.png');
+  background-size: cover;
+  background-position: center;
+  color: #ffd700;
+  text-shadow: 2px 2px 0 #000;
+}
+
+#victory-screen h1 {
+  font-size: 32px;
+  margin-bottom: 20px;
+  font-family: 'Press Start 2P', monospace;
+  text-align: center;
+}
+
+#continue-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-family: 'Press Start 2P', monospace;
+  background-color: #ffd700;
+  color: #000;
+  border: 3px solid #000;
+  cursor: pointer;
+}
