@@ -1,4 +1,4 @@
-![Sunny Poster](./docs/sunny.PNG)
+![Sunny Poster](./docs/sunny.png)
 
 # 🌞 Sunny
 
