@@ -1,3 +1,5 @@
+![Sunny Poster](./assets/sunny.PNG)
+
 # 🌞 Sunny
 
 **Sunny** is a retro-inspired 2D runner game made with HTML, CSS, and JavaScript.  
