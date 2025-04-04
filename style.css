@@ -79,8 +79,8 @@ canvas {
 #crew-banner img,
 #garp-banner img,
 #luffy-banner img {
-  width: 48px;
-  height: 48px;
+  width: 64px;
+  height: 64px;
   image-rendering: pixelated;
 }
 
