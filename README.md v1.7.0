@@ -1,4 +1,4 @@
-![version](https://img.shields.io/badge/version-1.5.1-green)
+![version](https://img.shields.io/badge/version-1.7.0-green)
 
 # 🌞 Sunny
 
@@ -26,6 +26,12 @@ It's a personal experiment — my first full game project — blending pixel art
 - **JavaScript (Vanilla)** – game loop, logic, events
 - **Pixel Art** – custom retro-style sprites
 - **MP3 Audio** – looping background music (chiptune)
+
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
+![Canvas API](https://img.shields.io/badge/Canvas-2D-0e76a8)
+![RetroPixel](https://img.shields.io/badge/Pixel-Art-green)
 
 ---
 
@@ -123,6 +129,7 @@ SunnySails/
     ├── sea-king.png
     ├── navy-boss.png
     ├── cannonball.png
+    ├── crew.png
     ├── luffy-banner.png
     ├── garp-banner.png
     ├── akuma-nomi.png
@@ -154,6 +161,13 @@ cd SunnySails
 ```
 https://your-username.github.io/SunnySails/
 ```
+---
+
+## 📚 Tutorial
+
+Want to learn how this game was built step-by-step?  
+Check the full dev tutorial here:  
+👉 [Sunny Sails – Full Game Development Tutorial](.docs/tutorial.md)
 
 ---
 
@@ -161,6 +175,14 @@ https://your-username.github.io/SunnySails/
 
 This project is open for learning and fun.  
 You may reuse the code freely. Please credit or replace visuals/audio if you plan to publish it elsewhere.
+
+---
+
+## 🙏 Credits
+
+- Font: [Press Start 2P](https://fonts.google.com/specimen/Press+Start+2P)
+- One Piece inspiration: characters and aesthetics © Eiichiro Oda
+- All images and sounds are custom or adapted for non-commercial use
 
 ---
 
