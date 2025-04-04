@@ -5,7 +5,7 @@
 **Sunny** is a retro-inspired 2D runner game made with HTML, CSS, and JavaScript.  
 It's a personal experiment — my first full game project — blending pixel art, Game Boy aesthetics, and basic game mechanics into a playful learning experience.
 
-> 🎮 **Play now:** [Click here to play Sunny on GitHub Pages](https://fschaitel.github.io/SunnySails/)  
+> 🎮 **Play now:** [Click here to play Sunny on GitHub Pages](https://fschaitel.github.io/Sunny/)  
 
 ---
 
