@@ -1,4 +1,4 @@
-![Sunny Poster](./docs/sunny.png)
+![version](https://img.shields.io/badge/version-1.5.1-green)
 
 # 🌞 Sunny
 
