@@ -1,3 +1,5 @@
+![Sunny Banner](docs/sunny.png)
+
 ![version](https://img.shields.io/badge/version-1.7.0-green)
 
 # 🌞 Sunny
