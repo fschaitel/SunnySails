@@ -1,4 +1,4 @@
-# 🌞 Sunny Sails: Tutorial Completo de Desenvolvimento
+# 🌞 Sunny: Tutorial Completo de Desenvolvimento
 
 > Um jogo no estilo Dino Runner com estética retrô, ambientado no universo de **One Piece**.
 
