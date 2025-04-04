@@ -1,189 +1,273 @@
-# SunnySails: Complete Tutorial for Developing a Dino Runner-Style Game
+# 🌞 Sunny: Full Game Development Tutorial
 
-## Introduction
-
-SunnySails is a game inspired by Google's classic Dino Runner, set in the One Piece universe, particularly featuring Monkey D. Luffy and his ship, the Thousand Sunny. This guide provides a detailed tutorial on creating the game using HTML, CSS, and JavaScript, including additional features like life systems, high scores, simple animations, and classic arcade mechanics.
+> A Dino Runner-style game with retro aesthetics, set in the **One Piece** universe.
 
 ---
 
-## Project Goals
+## 🎮 Overview
 
-- Develop a simple, pixel art (8-bit) style game.
-- Implement a local high score system.
-- Add basic animations and classic arcade-style mechanics.
+**Sunny** is a retro-inspired infinite runner built with HTML, CSS, and pure JavaScript. Inspired by Game Boy graphics and the world of One Piece, players control the ship Sunny to dodge waves, bosses, and other obstacles, aiming to survive as long as possible.
 
 ---
 
-## Project Structure
+## 📋 Requirements
+
+- Basic knowledge of HTML, CSS, and JavaScript
+- A modern browser (Chrome or Firefox recommended)
+- Code editor (VS Code suggested)
+
+---
+
+## 📁 Project Structure
 
 ```
 SunnySails/
-├── assets/
-│   └── images/
-├── css/
-│   └── style.css
-├── js/
-│   └── script.js
-└── index.html
+├── assets/               # Images, audio, and video
+├── index.html            # Game structure
+├── style.css             # Visual styling
+├── script.js             # Game logic
+├── README.md             # Project overview
+└── tutorial.md           # This full guide
 ```
 
 ---
 
-## Step-by-Step Guide
+## 📐 Step 1 – HTML Structure
 
-### 1. Basic HTML
-Create an `index.html` file as the main structure of the game.
+HTML defines the core layout: start screen, intro video, gameplay canvas, narrative banners, and game over/victory screens.
+
 ```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>SunnySails</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-  <canvas id="gameCanvas" width="800" height="400"></canvas>
-  <script src="js/script.js"></script>
-</body>
-</html>
+<canvas id="gameCanvas" style="display: none;"></canvas>
+
+<div id="start-screen">
+  <h1>SUNNY SAILS</h1>
+  <button id="start-button">START</button>
+</div>
+
+<video id="intro-video" width="800" height="400" style="display: none;" muted preload="auto">
+  <source src="assets/intro-video.mp4" type="video/mp4">
+</video>
+
+<div id="game-over-screen">...</div>
+<div id="victory-screen">...</div>
+
+<audio id="bg-music" src="assets/gb-music.mp3" loop></audio>
 ```
 
-### 2. CSS Styling
-The `style.css` file defines the visual appearance:
+---
+
+## 🎨 Step 2 – CSS Styling
+
+CSS ensures the nostalgic aesthetic with pixel fonts, bold colors, and a centered layout.
+
+Highlights:
+
 ```css
 body {
-  margin: 0;
-  padding: 0;
-  background-color: #87CEEB;
+  font-family: 'Press Start 2P', monospace;
+  background-color: #000;
+  color: #306230;
 }
+
 canvas {
-  display: block;
+  border: 4px solid #000;
   margin: 0 auto;
-  border: 3px solid #000;
+  display: block;
+}
+
+#start-screen {
+  background-image: url('assets/ocean-bg-light.png');
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 ```
 
-### 3. JavaScript – Basic Mechanics
-In the `script.js` file, initialize the canvas:
-```javascript
+---
+
+## 🧠 Step 3 – JavaScript Logic
+
+### 3.1 Initialize the Canvas
+
+```js
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-
-let ship = { x: 50, y: 200, width: 80, height: 40 };
-
-function drawShip() {
-  ctx.fillStyle = '#FF0000';
-  ctx.fillRect(ship.x, ship.y, ship.width, ship.height);
-}
-
-function update() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawShip();
-  requestAnimationFrame(update);
-}
-update();
+canvas.width = 800;
+canvas.height = 400;
 ```
 
-### 4. Adding Obstacles
-Create periodic obstacles for the ship to avoid:
-```javascript
-let obstacles = [];
+### 3.2 Player Ship
 
+```js
+let ship = {
+  x: 50,
+  y: 300,
+  width: 80,
+  height: 80,
+  speed: 5
+};
+```
+
+### 3.3 Movement Handling
+
+```js
+document.addEventListener('keydown', e => keys[e.key] = true);
+document.addEventListener('keyup', e => keys[e.key] = false);
+
+function updateMovement() {
+  if (keys['ArrowUp']) ship.y -= ship.speed;
+  if (keys['ArrowDown']) ship.y += ship.speed;
+}
+```
+
+---
+
+## 🌊 Step 4 – Obstacles & Collision
+
+### Create Obstacles (Waves)
+
+```js
 function createObstacle() {
-  obstacles.push({ x: canvas.width, y: 220, width: 30, height: 30 });
-}
-
-setInterval(createObstacle, 2000);
-
-function drawObstacles() {
-  ctx.fillStyle = '#000';
-  obstacles.forEach(obs => {
-    ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-    obs.x -= 3;
+  const h = 40 + Math.random() * 40;
+  obstacles.push({
+    x: canvas.width,
+    y: canvas.height - h,
+    width: h,
+    height: h,
+    speed: 4
   });
-}
-
-// Update the update() function
-function update() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawShip();
-  drawObstacles();
-  requestAnimationFrame(update);
 }
 ```
 
-### 5. Implementing Collision Detection and Lives
+### Collision Detection
 
-Add a life system with visual feedback:
-```javascript
-let lives = 3;
-
-function checkCollision() {
-  obstacles.forEach(obs => {
-    if (ship.x < obs.x + obs.width && ship.x + ship.width > obs.x && ship.y < obs.y + obs.height && ship.y + ship.height > obs.y) {
+```js
+function detectCollision() {
+  for (let o of obstacles) {
+    if (
+      ship.x < o.x + o.width &&
+      ship.x + ship.width > o.x &&
+      ship.y < o.y + o.height &&
+      ship.y + ship.height > o.y
+    ) {
       lives--;
-      shipBlink();
+      // trigger blink, show "GAME OVER", etc.
     }
+  }
+}
+```
+
+---
+
+## 👾 Step 5 – Boss, Items & Events
+
+### Sea King (Mini-Boss)
+
+```js
+if (score - lastSeaKingSpawn >= 1500) {
+  obstacles.push({
+    x: canvas.width,
+    y: canvas.height - 140,
+    width: 120,
+    height: 120,
+    isSeaKing: true
   });
+  lastSeaKingSpawn = score;
+}
+```
+
+### Navy Boss Battle
+
+The Navy Boss is a major event that triggers after 10,000 points:
+
+- **Entrance Phase**: the Navy ship enters from the right and moves into position.
+- **Battle Phase** (15 seconds):
+  - Moves vertically between water limits.
+  - Fires cannonballs periodically.
+  - Cannonballs damage the player on contact unless blinking.
+- **Exit Phase**:
+  - The boss speeds off to the left.
+  - Game pauses and shows the **Victory Screen**.
+  - Background music switches to a special boss theme.
+
+Example setup:
+
+```js
+function startBossBattle() {
+  bossActive = true;
+  bossStartTime = Date.now();
+  bossShip = { ... };
+  bossMusic.play();
 }
 
-function shipBlink() {
-  let visible = true;
-  const blink = setInterval(() => {
-    visible = !visible;
-    ctx.globalAlpha = visible ? 1 : 0;
-    if (lives <= 0) clearInterval(blink);
-  }, 200);
-
-  setTimeout(() => clearInterval(blink), 2000);
+function updateBoss() {
+  if (elapsed < 15) moveBossAndShoot();
+  else if (elapsed >= 18) exitBossBattle();
 }
+```
 
-// Include this inside the update() function
-checkCollision();
+### Narrative Dialogues
+
+```js
+if (score >= 7000 && score < 7700) {
+  document.getElementById('garp-banner').style.display = 'flex';
+  document.getElementById('luffy-banner').style.display = 'flex';
+}
 ```
 
 ---
 
-## High Score System
+## 🎵 Step 6 – Audio & Intro Video
 
-Save scores locally using localStorage:
-```javascript
-function updateHighScore(currentScore) {
-  let scores = JSON.parse(localStorage.getItem('highScores')) || [];
-  scores.push(currentScore);
-  scores.sort((a, b) => b - a);
-  scores = scores.slice(0, 3);
-  localStorage.setItem('highScores', JSON.stringify(scores));
-}
-```
+### Sync video and background music
 
----
-
-## Pause and Additional Controls
-
-Pause the game using the "P" key:
-```javascript
-let paused = false;
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'p') paused = !paused;
+```js
+startButton.addEventListener('click', () => {
+  introVideo.style.display = 'block';
+  introVideo.play();
+  bgMusic.play();
+  introVideo.onended = () => {
+    introVideo.style.display = 'none';
+    gameLoop();
+  };
 });
-
-function update() {
-  if (paused) return requestAnimationFrame(update);
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawShip();
-  drawObstacles();
-  checkCollision();
-  requestAnimationFrame(update);
-}
 ```
 
 ---
 
-## Final Thoughts
+## 💡 Optional Additions
 
-This tutorial covers the main mechanics and aspects already implemented in SunnySails. Following these steps, you'll have a functional game featuring essential gameplay mechanics and simple arcade-style animations. The modular structure allows for further development and addition of more complex visual effects and mechanics inspired by the One Piece universe.
+### ✅ Checkpoint System
+- Allow player to resume from boss stage.
+
+### 🎁 Bonus Items
+- Extra lives, speed boost, temporary shields.
+
+### 🧩 Championship Mode
+- Simulate rounds with score tracking (great for future ML use cases).
 
 ---
 
+## 🧪 Testing & Debugging
+
+- Use `console.log()` to debug collisions and event triggers.
+- Test on multiple browsers.
+- Use DevTools > Network tab to ensure assets load properly.
+
+---
+
+## 🧼 Best Practices
+
+- Use meaningful function and variable names
+- Comment complex logic
+- Centralize asset paths in constants
+- Keep code modular and readable
+
+---
+
+## 🚀 You're Ready! What's Next?
+
+- Deploy on GitHub Pages (steps in `README.md`)
+- Share it in dev forums, showcase in your portfolio
+- Try converting to TypeScript or using game libraries
