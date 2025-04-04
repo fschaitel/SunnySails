@@ -145,8 +145,8 @@ SunnySails/
 ## 🚀 Run Locally
 
 ```bash
-git clone https://github.com/your-username/SunnySails.git
-cd SunnySails
+git clone https://github.com/your-username/Sunny.git
+cd Sunny
 # Use Live Server (VS Code extension) or any local HTTP server
 ```
 
@@ -169,7 +169,7 @@ https://your-username.github.io/SunnySails/
 
 Want to learn how this game was built step-by-step?  
 Check the full dev tutorial here:  
-👉 [Sunny Sails – Full Game Development Tutorial](.docs/tutorial.md)
+👉 [Sunny – Full Game Development Tutorial](.docs/tutorial.md)
 
 ---
 
@@ -192,5 +192,5 @@ You may reuse the code freely. Please credit or replace visuals/audio if you pla
 
 Created with curiosity and pixel love  
 by **Felipe Schaitel**  
-🗓️ 2025-04-02
+🗓️ 2025-04-04
 
