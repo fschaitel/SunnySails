@@ -236,19 +236,6 @@ startButton.addEventListener('click', () => {
 
 ---
 
-## 💡 Expansões Opcionais
-
-### ✅ Sistema de Checkpoints
-- Permite retornar direto para o chefe em vez de reiniciar.
-
-### 🏱 Itens Bônus
-- Vidas extras, impulso de velocidade, escudo temporário.
-
-### 🧩 Modo Campeonato
-- Simula rodadas com placar (interessante para aplicações futuras com IA).
-
----
-
 ## 🧪 Testes e Debug
 
 - Use `console.log()` para depurar colisões e eventos.
